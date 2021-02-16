@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/mbraunwarth/link/link"
 )
 
 func main() {
