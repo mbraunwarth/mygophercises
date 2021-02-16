@@ -1,6 +1,7 @@
 package link
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -11,6 +12,10 @@ import (
 type Link struct {
 	Href string
 	Text string
+}
+
+func (l Link) String() string {
+	return fmt.Sprintf("{%v - %v}", l.Href, l.Text)
 }
 
 // Parse takes an HTML file and parses its content such that it returns a list of all
