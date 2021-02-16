@@ -26,4 +26,7 @@ func main() {
 		log.Fatalf("could not open file %v: %v", input, err)
 	}
 	defer f.Close()
+
+	ls, err := link.Parse(f)
+	fmt.Println(ls)
 }
