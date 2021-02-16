@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Adventure}}</title>
+</head>
+<body>
+    <!-- Adventure Title -->
+    <h1 style="text-transform: capitalize;">{{.Adventure}}</h1>
+
+    <!-- Arc Title -->
+    <h2><i>{{.Arc}} Arc</i></h2>
+
+    <!-- Story -->
+    {{range .Story}}<p>{{ . }}</p>{{else}}<div>Nothing here.</div>{{end}}
+
+    <hr>
+    <h3>Whats next?</h3>
+    <!-- Options -->
+    {{range .Options}}
+        <div>{{ .NextArcName }}</div>
+        <div>{{ .NextArcText }}</div>
+        <br>
+    {{else}}
+        <p>You've reached the end of the story</p>
+    {{end}}
+</body>
+</html>
