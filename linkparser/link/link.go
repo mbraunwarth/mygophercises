@@ -56,7 +56,7 @@ func Parse(file *os.File) ([]Link, error) {
 func stripText(n *html.Node) string {
 	var txt []string
 	if n.Type == html.TextNode {
-		t := n.Data
+		t := strings.TrimSpace(n.Data)
 		txt = append(txt, t)
 	}
 	// depth first traversel
