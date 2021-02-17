@@ -54,18 +54,17 @@ func Parse(file *os.File) ([]Link, error) {
 }
 
 func stripText(n *html.Node) string {
-	var txt []string
+	var b strings.Builder
 	if n.Type == html.TextNode {
-		t := strings.TrimSpace(n.Data)
-		txt = append(txt, t)
+		b.WriteString(n.Data)
 	}
 	// depth first traversel
 	if n.FirstChild != nil {
-		txt = append(txt, stripText(n.FirstChild))
+		b.WriteString(stripText(n.FirstChild))
 	}
 	if n.NextSibling != nil {
-		txt = append(txt, stripText(n.NextSibling))
+		b.WriteString(stripText(n.NextSibling))
 	}
 
-	return strings.Join(txt, "")
+	return strings.Join(strings.Fields(b.String()), " ")
 }
