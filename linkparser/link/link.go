@@ -31,6 +31,7 @@ func Parse(file *os.File) ([]Link, error) {
 	var traverse func(n *html.Node)
 	traverse = func(n *html.Node) {
 		// get href attribute if node is a link tag
+		// and strip its text(s)
 		if n.Type == html.ElementNode && n.Data == "a" {
 			for _, a := range n.Attr {
 				if a.Key == "href" {
@@ -40,7 +41,7 @@ func Parse(file *os.File) ([]Link, error) {
 			}
 		}
 
-		// depth first traversel
+		// depth first traversal
 		if n.FirstChild != nil {
 			traverse(n.FirstChild)
 		}
@@ -53,12 +54,14 @@ func Parse(file *os.File) ([]Link, error) {
 	return links, nil
 }
 
+// recursively search for text nodes and add their values to the resulting string
+// using the strings.Builder
 func stripText(n *html.Node) string {
 	var b strings.Builder
 	if n.Type == html.TextNode {
 		b.WriteString(n.Data)
 	}
-	// depth first traversel
+	// depth first traversal
 	if n.FirstChild != nil {
 		b.WriteString(stripText(n.FirstChild))
 	}
@@ -66,5 +69,8 @@ func stripText(n *html.Node) string {
 		b.WriteString(stripText(n.NextSibling))
 	}
 
+	// splitting the string in fields and joining it back together
+	// with a single white space as separator gets rid of redundant
+	// white space characters
 	return strings.Join(strings.Fields(b.String()), " ")
 }
