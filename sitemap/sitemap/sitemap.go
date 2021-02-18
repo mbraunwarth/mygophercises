@@ -18,4 +18,7 @@ func Build(host string) Sitemap {
 	}
 }
 
-//type Site??
+// ToXML writes the corresponding XML from the sitemap.
+func (s Sitemap) ToXML(file string) error {
+	return nil
+}
