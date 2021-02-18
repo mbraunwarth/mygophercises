@@ -20,9 +20,9 @@ func (l Link) String() string {
 
 // Parse takes an HTML file and parses its content such that it returns a list of all
 // link tags with the corresponding href attribute and its text.
-func Parse(file *io.Reader) ([]Link, error) {
+func Parse(r io.Reader) ([]Link, error) {
 	// as the parser expects an io.Reader, just passing the os.File
-	root, err := html.Parse(*file)
+	root, err := html.Parse(r)
 	if err != nil {
 		return nil, err
 	}
