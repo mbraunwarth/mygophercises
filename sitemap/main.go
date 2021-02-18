@@ -1,23 +1,16 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
-
-	"github.com/mbraunwarth/sitemap/link"
+	"github.com/mbraunwarth/sitemap/sitemap"
 )
 
 func main() {
-	f, err := os.Open("ex.html")
-	if err != nil {
-		log.Fatalf("could not open file %v: %v", f.Name(), err)
-	}
+	// get host from command line (use args instead of flags)
+	host := "https://www.sitemaps.org/"
 
-	ls, err := link.Parse(f)
-	if err != nil {
-		log.Fatalf("could not parse file %v: %v", f.Name(), err)
-	}
+	// parse host/build sitemap (naming convention?)
+	s := sitemap.Build(host)
 
-	fmt.Println(ls)
+	// write sitemap to xml
+	s.ToXML("sitemap.xml")
 }
