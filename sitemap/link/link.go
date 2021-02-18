@@ -2,7 +2,7 @@ package link
 
 import (
 	"fmt"
-	"os"
+	"io"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -20,9 +20,9 @@ func (l Link) String() string {
 
 // Parse takes an HTML file and parses its content such that it returns a list of all
 // link tags with the corresponding href attribute and its text.
-func Parse(file *os.File) ([]Link, error) {
+func Parse(file *io.Reader) ([]Link, error) {
 	// as the parser expects an io.Reader, just passing the os.File
-	root, err := html.Parse(file)
+	root, err := html.Parse(*file)
 	if err != nil {
 		return nil, err
 	}
