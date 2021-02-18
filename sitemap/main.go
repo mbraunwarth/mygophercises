@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/mbraunwarth/sitemap/sitemap"
 )
 
@@ -9,7 +11,10 @@ func main() {
 	host := "https://www.sitemaps.org/"
 
 	// parse host/build sitemap (naming convention?)
-	s := sitemap.Build(host)
+	s, err := sitemap.Build(host)
+	if err != nil {
+		log.Fatalf("could not build sitemap from host %v: %v", host, err)
+	}
 
 	// write sitemap to xml
 	s.ToXML("sitemap.xml")
