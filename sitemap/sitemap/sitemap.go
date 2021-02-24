@@ -23,23 +23,28 @@ type Sitemap struct {
 	namespace string
 }
 
-// TODO Builder does not return any errors, think of 'readSite' first
-
 // Build returns a new empty Sitemap for the given host.
 func Build(host string) (Sitemap, error) {
-	// TODO when program's working for further improvement fire go routines for this
-	readSite(host)
-
-	return Sitemap{
+	s := Sitemap{
+		M:         make(map[string][]string),
 		host:      host,
 		namespace: ns09,
-	}, nil
+	}
+
+	// TODO when program's working for further improvement fire go routines for this
+	if err := s.parseHost(); err != nil {
+		return Sitemap{}, err
+	}
+
+	return s, nil
 }
 
-// TODO new name! make it receiver method on Sitemap for access to host, map etc.
-func readSite(host string) error {
+// parseHost makes the inital request to the sitemaps host, eventually receiving
+// a response which will be read in order to process all links in its body, which
+// themselves will be added to the sitemaps map field.
+func (s Sitemap) parseHost() error {
 	// initiate client requests for each link on the site
-	resp, err := http.Get(host)
+	resp, err := http.Get(s.host)
 	if err != nil {
 		return err
 	}
@@ -55,20 +60,15 @@ func readSite(host string) error {
 
 	for _, l := range ls {
 		log.Println(l.Href)
-		parseLink(l.Href)
+		// is link in domain?
+		//   true if of form /some/link
+		// otherwise match first part against host value
+		//   true if matching performs with true
+
+		// if true add to sitemap list
 	}
 
 	return nil
-}
-
-// TODO new function necessary? if so, use receiver method instead
-func parseLink(link string) {
-	// is link in domain?
-	//   true if of form /some/link
-	// otherwise match first part against host value
-	//   true if matching performs with true
-
-	// if true add to sitemap list
 }
 
 // ToXML writes the corresponding XML from the sitemap.
