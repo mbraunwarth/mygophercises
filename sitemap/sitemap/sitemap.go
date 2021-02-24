@@ -21,6 +21,7 @@ type Sitemap struct {
 }
 
 // TODO Builder does not return any errors, think of 'readSite' first
+
 // Build returns a new empty Sitemap for the given host.
 func Build(host string) (Sitemap, error) {
 	// TODO when program's working for further improvement fire go routines for this
