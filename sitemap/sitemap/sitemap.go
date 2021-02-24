@@ -11,12 +11,15 @@ const (
 	ns09 = "http://www.sitemaps.org/schemas/sitemap/0.9"
 )
 
-// TODO restructure Sitemap struct
-
 // Sitemap structure.
 type Sitemap struct {
-	m         map[string]string
-	host      string
+	// actual map with entries e.g. '/home' -> ['/login', '/about']
+	M map[string][]string
+
+	// host is of form hostname.domain.[org|com|de|...]
+	host string
+
+	// XML schema of the sitemap protocol
 	namespace string
 }
 
@@ -42,11 +45,10 @@ func readSite(host string) error {
 	}
 
 	// remember closing the body
-	b := resp.Body
-	defer b.Close()
+	defer resp.Body.Close()
 
 	// get all links from the host
-	ls, err := link.Parse(b)
+	ls, err := link.Parse(resp.Body)
 	if err != nil {
 		return err
 	}
