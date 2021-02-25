@@ -3,6 +3,7 @@ package sitemap
 import (
 	"log"
 	"net/http"
+	"regexp"
 
 	"github.com/mbraunwarth/sitemap/link"
 )
@@ -58,20 +59,54 @@ func (s Sitemap) parseHost() error {
 		return err
 	}
 
-	for _, l := range ls {
-		log.Println(l.Href)
-		// is link in domain?
-		//   true if of form /some/link
-		// otherwise match first part against host value
-		//   true if matching performs with true
-
-		// if true add to sitemap list
-	}
+	// validate links and add to list for current site - starting with host
+	s.M = parseLinks(ls, s.host, make(map[string][]string, 0))
 
 	return nil
 }
 
+// parseLinks validates links and add to list for current site.
+func parseLinks(ls []link.Link, s string, m map[string][]string) map[string][]string {
+	// matches in-house links
+	validLink := regexp.MustCompile(`^([a-zA-Z]+\/?)+\.[a-zA-Z]*`)
+	// matches links prefixed with the domain
+	validHostLink := regexp.MustCompile(s)
+
+	var list []string
+
+	for _, l := range ls {
+		// link not already parsed?
+		for k := range m {
+			if k != l.Href {
+				// is link in domain?
+				loc := validHostLink.FindIndex([]byte(l.Href))
+				if (loc != nil && loc[0] == 0) || validLink.MatchString(l.Href) {
+					// if so add to sitemap list if not already added
+					if !contains(list, l.Href) {
+						list = append(list, l.Href)
+					}
+				}
+			}
+		}
+	}
+
+	m[s] = list
+
+	return m
+}
+
 // ToXML writes the corresponding XML from the sitemap.
 func (s Sitemap) ToXML(file string) error {
+	log.Println(s.M)
 	return nil
+}
+
+// contains checks if a string is present in a slice.
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }
