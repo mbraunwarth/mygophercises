@@ -1,6 +1,6 @@
 package main
 
-import "github.com/spf13/cobra/cobra/cmd"
+import "github.com/mbraunwarth/task/cmd"
 
 /* CLI Task Manager
  * This will be a command line app to manage tasks. The app should include
